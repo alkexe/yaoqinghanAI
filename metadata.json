@@ -1,0 +1,7 @@
+{
+  "name": "InviteAI - Magic Invitations",
+  "description": "Generate stunning, personalized invitation designs for any event in seconds using AI.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
