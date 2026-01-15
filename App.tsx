@@ -32,7 +32,7 @@ function App() {
     setLoading(false);
   };
 
-  // --- 样式定义 (内联样式确保样式不丢失) ---
+  // --- 样式定义 ---
   const styles = {
     container: {
       display: 'flex',
@@ -48,6 +48,8 @@ function App() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
+      backgroundColor: '#0f172a',
+      zIndex: 10
     },
     headerTitle: {
       fontSize: '20px',
@@ -60,14 +62,25 @@ function App() {
       display: 'flex',
       flex: 1,
       overflow: 'hidden',
-      flexDirection: 'row' as const, // 桌面端左右布局
+      flexDirection: 'row' as const,
     },
+    // 左侧：配置面板 (现在在左边了)
+    configPanel: {
+      width: '400px', // 固定宽度
+      backgroundColor: '#1e293b',
+      padding: '32px',
+      display: 'flex',
+      flexDirection: 'column' as const,
+      borderRight: '1px solid #334155', // [修改] 边框改到右侧作为分割线
+      overflowY: 'auto' as const,
+    },
+    // 右侧：预览区域 (现在在右边了)
     previewSection: {
       flex: 1,
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#020617', // 更深的预览区背景
+      backgroundColor: '#020617',
       padding: '20px',
       position: 'relative' as const,
     },
@@ -80,15 +93,6 @@ function App() {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-    },
-    configPanel: {
-      width: '400px', // 固定宽度的侧边栏
-      backgroundColor: '#1e293b', // 侧边栏背景
-      padding: '32px',
-      display: 'flex',
-      flexDirection: 'column' as const,
-      borderLeft: '1px solid #334155',
-      overflowY: 'auto' as const,
     },
     sectionTitle: {
       fontSize: '24px',
@@ -133,7 +137,7 @@ function App() {
       marginTop: '40px',
       width: '100%',
       padding: '16px',
-      background: 'linear-gradient(to right, #4f46e5, #7c3aed)', // 紫色渐变按钮
+      background: 'linear-gradient(to right, #4f46e5, #7c3aed)',
       color: 'white',
       border: 'none',
       borderRadius: '12px',
@@ -173,30 +177,11 @@ function App() {
       </div>
 
       <div style={styles.main}>
-        {/* 左侧：预览区域 */}
-        <div style={styles.previewSection}>
-          {loading ? (
-            <div style={{textAlign: 'center', color: '#94a3b8'}}>
-              <div className="spinner" style={{marginBottom: '20px', fontSize: '40px'}}>🎨</div>
-              <div>正在请求 {AI_MODELS.find(m => m.id === selectedModel)?.name} 作画...</div>
-            </div>
-          ) : imageUrl ? (
-            <div style={styles.previewBox}>
-              <img src={imageUrl} alt="Generated Invitation" style={{maxWidth: '100%', maxHeight: '80vh', objectFit: 'contain'}} />
-            </div>
-          ) : (
-            <div style={{color: '#475569', textAlign: 'center'}}>
-              <div style={{fontSize: '48px', marginBottom: '16px'}}>🖼️</div>
-              <div>预览区域</div>
-            </div>
-          )}
-        </div>
-
-        {/* 右侧：配置面板 */}
+        {/* 左侧：配置面板 (编辑栏放在左侧) */}
         <div style={styles.configPanel}>
           <div style={styles.sectionTitle}>Configure Invitation</div>
 
-          {/* 1. 模型选择器 (新功能) */}
+          {/* 模型选择器 */}
           <div>
             <label style={styles.label}>AI Model (画师)</label>
             <div style={styles.modelBtnContainer}>
@@ -212,7 +197,6 @@ function App() {
             </div>
           </div>
 
-          {/* 2. 原有输入框 */}
           <div>
             <label style={styles.label}>Event Type</label>
             <input
@@ -243,18 +227,37 @@ function App() {
             />
           </div>
 
-          {/* 生成按钮 */}
           <button style={styles.button} onClick={handleGenerate} disabled={loading}>
             {loading ? 'Generating...' : '✨ Generate Invitation'}
           </button>
         </div>
+
+        {/* 右侧：预览区域 */}
+        <div style={styles.previewSection}>
+          {loading ? (
+            <div style={{textAlign: 'center', color: '#94a3b8'}}>
+              <div className="spinner" style={{marginBottom: '20px', fontSize: '40px'}}>🎨</div>
+              <div>正在请求 {AI_MODELS.find(m => m.id === selectedModel)?.name} 作画...</div>
+            </div>
+          ) : imageUrl ? (
+            <div style={styles.previewBox}>
+              <img src={imageUrl} alt="Generated Invitation" style={{maxWidth: '100%', maxHeight: '80vh', objectFit: 'contain'}} />
+            </div>
+          ) : (
+            <div style={{color: '#475569', textAlign: 'center'}}>
+              <div style={{fontSize: '48px', marginBottom: '16px'}}>🖼️</div>
+              <div>预览区域</div>
+            </div>
+          )}
+        </div>
       </div>
       
-      {/* 移动端适配 (简单处理) */}
+      {/* 移动端适配: 手机上自动变为上下布局 */}
       <style>{`
         @media (max-width: 768px) {
           div[style*="flex-direction: row"] { flex-direction: column !important; }
-          div[style*="width: 400px"] { width: 100% !important; border-left: none !important; border-top: 1px solid #334155; }
+          /* 移动端去掉右边框，增加下边框分隔 */
+          div[style*="width: 400px"] { width: 100% !important; border-right: none !important; border-bottom: 1px solid #334155; }
           div[style*="height: 100vh"] { height: auto !important; min-height: 100vh; }
         }
       `}</style>
