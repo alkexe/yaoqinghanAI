@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { GeminiService } from './services/geminiService';
 
-// 定义支持的模型列表
+// [核心修复] 更新为官方正确的模型 ID
 const AI_MODELS = [
+  // 1. 通义万相 (阿里官方，最稳)
   { name: '通义万相', id: 'Qwen/Qwen-Image' },
-  { name: 'Flux', id: 'MusePublic/FLUX.1-dev' },
-  { name: 'Kontext', id: 'MusePublic/FLUX.1-Kontext-Dev' },
-  { name: 'Krea', id: 'black-forest-labs/FLUX.1-Krea-dev' }
+  
+  // 2. Flux.1 Dev (Black Forest Labs 官方 ID) - 之前那个 MusePublic 是错的
+  { name: 'Flux Dev', id: 'black-forest-labs/FLUX.1-dev' },
+  
+  // 3. Flux.1 Schnell (官方极速版，生成更快)
+  { name: 'Flux Fast', id: 'black-forest-labs/FLUX.1-schnell' },
+  
+  // 4. Stable Diffusion XL (SDXL 官方版，保底备用)
+  { name: 'SDXL 1.0', id: 'stabilityai/stable-diffusion-xl-base-1.0' }
 ];
 
 function App() {
@@ -16,7 +23,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   
-  // 默认选中通义万相
+  // 默认选中通义万相 (最不容易出错)
   const [selectedModel, setSelectedModel] = useState(AI_MODELS[0].id);
 
   const handleGenerate = async () => {
@@ -38,7 +45,7 @@ function App() {
       display: 'flex',
       flexDirection: 'column' as const,
       height: '100vh',
-      backgroundColor: '#0f172a', // 深色背景
+      backgroundColor: '#0f172a',
       color: 'white',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     },
@@ -64,17 +71,17 @@ function App() {
       overflow: 'hidden',
       flexDirection: 'row' as const,
     },
-    // 左侧：配置面板 (现在在左边了)
+    // 左侧：配置面板
     configPanel: {
-      width: '400px', // 固定宽度
+      width: '400px',
       backgroundColor: '#1e293b',
       padding: '32px',
       display: 'flex',
       flexDirection: 'column' as const,
-      borderRight: '1px solid #334155', // [修改] 边框改到右侧作为分割线
+      borderRight: '1px solid #334155',
       overflowY: 'auto' as const,
     },
-    // 右侧：预览区域 (现在在右边了)
+    // 右侧：预览区域
     previewSection: {
       flex: 1,
       display: 'flex',
@@ -177,7 +184,7 @@ function App() {
       </div>
 
       <div style={styles.main}>
-        {/* 1. 配置面板 (编辑栏放在左侧) */}
+        {/* 配置面板 */}
         <div style={styles.configPanel}>
           <div style={styles.sectionTitle}>Configure Invitation</div>
 
@@ -232,7 +239,7 @@ function App() {
           </button>
         </div>
 
-        {/* 2. 预览区域 (放在右侧) */}
+        {/* 预览区域 */}
         <div style={styles.previewSection}>
           {loading ? (
             <div style={{textAlign: 'center', color: '#94a3b8'}}>
@@ -252,11 +259,10 @@ function App() {
         </div>
       </div>
       
-      {/* 移动端适配: 手机上自动变为上下布局 */}
+      {/* 移动端适配 */}
       <style>{`
         @media (max-width: 768px) {
           div[style*="flex-direction: row"] { flex-direction: column !important; }
-          /* 移动端去掉右边框，增加下边框分隔 */
           div[style*="width: 400px"] { width: 100% !important; border-right: none !important; border-bottom: 1px solid #334155; }
           div[style*="height: 100vh"] { height: auto !important; min-height: 100vh; }
         }
