@@ -1,5 +1,5 @@
 export class GeminiService {
-  // 必须使用 import.meta.env 才能读取到 Vite 注入的环境变量
+  // 必须使用 import.meta.env 读取注入的环境变量
   private static apiKey = import.meta.env.VITE_API_KEY || ''; 
 
   static async generateInvitation(params: {
@@ -8,16 +8,12 @@ export class GeminiService {
     style: string;
   }): Promise<string | null> {
     
-    // 检查 Key 是否存在
     if (!this.apiKey) {
       console.error("API key is missing! 请检查 Deno 项目内部 Settings 里的 Environment Variables");
       return null;
     }
 
-    const prompt = `A professional invitation background for ${params.eventType}. Style: ${params.style}. Details: ${params.description}. High resolution, 4K, artistic.`;
-
     try {
-      // 使用 ModelScope 最稳的 OpenAI 兼容接口地址
       const response = await fetch('https://api-inference.modelscope.cn/v1/images/generations', {
         method: 'POST',
         headers: {
@@ -26,24 +22,16 @@ export class GeminiService {
         },
         body: JSON.stringify({
           model: 'AI-ModelScope/stable-diffusion-v2-1', 
-          prompt: prompt,
+          prompt: `Invitation for ${params.eventType}, ${params.style} style, ${params.description}`,
           n: 1,
           size: "1024x1024"
         }),
       });
 
       const result = await response.json();
-
-      if (!response.ok) {
-        console.error("ModelScope 接口报错:", result);
-        return null;
-      }
-
-      // 提取生成的图片链接
       return result.data?.[0]?.url || null;
-
     } catch (error) {
-      console.error("生成请求异常:", error);
+      console.error("生成失败:", error);
       return null;
     }
   }
