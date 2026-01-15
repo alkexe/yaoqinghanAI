@@ -177,7 +177,7 @@ function App() {
       </div>
 
       <div style={styles.main}>
-        {/* 左侧：配置面板 (编辑栏放在左侧) */}
+        {/* 1. 配置面板 (编辑栏放在左侧) */}
         <div style={styles.configPanel}>
           <div style={styles.sectionTitle}>Configure Invitation</div>
 
@@ -232,7 +232,7 @@ function App() {
           </button>
         </div>
 
-        {/* 右侧：预览区域 */}
+        {/* 2. 预览区域 (放在右侧) */}
         <div style={styles.previewSection}>
           {loading ? (
             <div style={{textAlign: 'center', color: '#94a3b8'}}>
