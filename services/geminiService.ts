@@ -8,6 +8,7 @@ export class GeminiService {
     style: string;
   }): Promise<string | null> {
     
+    // 检查 Key 是否存在
     if (!this.apiKey) {
       console.error("API key is missing! 请检查 Deno 项目内部 Settings 里的 Environment Variables");
       return null;
@@ -34,14 +35,15 @@ export class GeminiService {
       const result = await response.json();
 
       if (!response.ok) {
-        console.error("ModelScope 报错:", result);
+        console.error("ModelScope 接口报错:", result);
         return null;
       }
 
+      // 提取生成的图片链接
       return result.data?.[0]?.url || null;
 
     } catch (error) {
-      console.error("网络请求异常:", error);
+      console.error("生成请求异常:", error);
       return null;
     }
   }
