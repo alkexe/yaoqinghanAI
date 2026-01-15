@@ -20,3 +20,4 @@ View your app in AI Studio: https://ai.studio/apps/drive/1kexM7KKxbC2sYUpgmQ1qoR
    `npm run dev`
 Updated config
 Refresh build for API Key
+Fixed API Key environment variable
