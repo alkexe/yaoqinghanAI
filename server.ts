@@ -82,7 +82,8 @@ serve(async (req) => {
       const { prompt } = await req.json();
       
       // 读取我们在 Deno Settings 里设置好的 VITE_API_KEY
-      const apiKey = Deno.env.get("VITE_API_KEY");
+      // 这里增加一个容错：也可以读取 MODELSCOPE_API_KEY
+      const apiKey = Deno.env.get("VITE_API_KEY") || Deno.env.get("MODELSCOPE_API_KEY");
       
       if (!apiKey) {
         console.error("[Server] 缺少 API Key");
