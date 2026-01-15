@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { GeminiService } from './services/geminiService';
 
-// [核心修复] 更新为官方正确的模型 ID
+// [核心修复] 更新为官方正确的 ModelScope 模型 ID
 const AI_MODELS = [
-  // 1. 通义万相 (阿里官方，最稳)
+  // 1. 通义万相 (阿里官方，通常有免费额度，最稳)
   { name: '通义万相', id: 'Qwen/Qwen-Image' },
   
-  // 2. Flux.1 Dev (Black Forest Labs 官方 ID) - 之前那个 MusePublic 是错的
+  // 2. Flux.1 Dev (Black Forest Labs 官方 ID) - 修复了之前的错误 ID
   { name: 'Flux Dev', id: 'black-forest-labs/FLUX.1-dev' },
   
   // 3. Flux.1 Schnell (官方极速版，生成更快)
   { name: 'Flux Fast', id: 'black-forest-labs/FLUX.1-schnell' },
   
-  // 4. Stable Diffusion XL (SDXL 官方版，保底备用)
+  // 4. Stable Diffusion XL (SDXL 1.0 官方版，经典保底)
   { name: 'SDXL 1.0', id: 'stabilityai/stable-diffusion-xl-base-1.0' }
 ];
 
@@ -184,7 +184,7 @@ function App() {
       </div>
 
       <div style={styles.main}>
-        {/* 配置面板 */}
+        {/* 配置面板 (编辑栏在左侧) */}
         <div style={styles.configPanel}>
           <div style={styles.sectionTitle}>Configure Invitation</div>
 
@@ -239,7 +239,7 @@ function App() {
           </button>
         </div>
 
-        {/* 预览区域 */}
+        {/* 预览区域 (在右侧) */}
         <div style={styles.previewSection}>
           {loading ? (
             <div style={{textAlign: 'center', color: '#94a3b8'}}>
