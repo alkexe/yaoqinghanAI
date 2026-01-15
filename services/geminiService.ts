@@ -3,19 +3,23 @@ export class GeminiService {
     eventType: string;
     description: string;
     style: string;
+    model: string; // [新增] 接收模型参数
   }): Promise<string | null> {
     
-    // 构建提示词
-    const prompt = `A professional invitation card background for ${params.eventType}. Style: ${params.style}. Details: ${params.description}. High quality, no text.`;
+    // 针对 Flux 系列模型，提示词需要优化为英文且更具描述性
+    const prompt = `A professional invitation card background for ${params.eventType}. Style: ${params.style}. Details: ${params.description}. High quality, no text, artistic composition, 8k resolution.`;
 
     try {
-      // 请求我们自己的 Deno 后端 (server.ts)
       const response = await fetch('/api/generate-invitation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ prompt: prompt }),
+        // [修改] 将选中的模型 ID 传给后端
+        body: JSON.stringify({ 
+          prompt: prompt,
+          model: params.model 
+        }),
       });
 
       const result = await response.json();
